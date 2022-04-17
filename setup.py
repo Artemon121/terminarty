@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
-VERSION = '0.0.3'
+VERSION = '0.0.4'
 DESCRIPTION = 'A simple CLI helper for python'
 
 # Setting up
