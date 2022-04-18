@@ -8,7 +8,7 @@
 ## Installation
 
 ```bash
-$ pip install terminarty
+pip install terminarty
 ```
 ## Features
 **Inputs**
@@ -38,9 +38,9 @@ else:
 ```python
 from terminarty import Box, BoxStyles
 
-print(Box("Hello World!", BoxStyles.Ascii))
+print(Box("Hello World", BoxStyles.Ascii))
 ```
-There are several box styles available.
+There are several box styles available:
 ```text
 Ascii:
     +───────────+
@@ -64,5 +64,5 @@ Round:
     ╰───────────╯
 ```
 
-## And that is all?
+## And that's all?
 *Yes.*
