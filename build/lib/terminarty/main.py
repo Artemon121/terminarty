@@ -4,7 +4,7 @@ import os
 import sys
 
 
-class InputDontMatchCheck(Exception):
+class InputDontMatch(Exception):
     pass
 
 class Terminal:
@@ -29,7 +29,7 @@ class Terminal:
         inp = input(Terminal.INPUT_STYLE)
         if check is not None:
             if not check(inp):
-                raise InputDontMatchCheck(f'Input does not match check: {check.__name__}')
+                raise InputDontMatch(f'Input does not match check: {check.__name__}')
         Terminal.clear()
         return inp
 

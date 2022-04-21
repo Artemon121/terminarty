@@ -23,9 +23,11 @@ name = terminal.input("What is your name?")
 
 **Choises**
 ```python
-from terminarty import Choises
+from terminarty import Terminal
 
-choise = Choises.choise(["red", "green", "blue"], "What is your favorite color?")
+terminal = Terminal()
+
+choise = terminal.choise("What is your favorite color?", ["red", "green", "blue"])
 
 if choise == "green":
     print("I like green too!")
@@ -63,6 +65,12 @@ Round:
     │Hello World│
     ╰───────────╯
 ```
+**Waitings**
+```python
+from terminarty import Waiting
+import time
 
-## And that's all?
-*Yes.*
+with Waiting("Loading"): # "Loading..." would work the same
+    time.sleep(5)
+```
+!["Loading..."](https://imgur.com/a/hMhNov2.gif)
