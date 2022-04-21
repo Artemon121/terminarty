@@ -1,6 +1,10 @@
 
-from .main import Terminal, Choises, InputDontMatch
+from .terminal import Terminal
 from .box import Box
+from .waiting import Waiting
 from . import BoxStyles
 
-__all__ = ['Terminal', 'Choises', 'InputDontMatch', 'Box', 'BoxStyles']
+from colorama import init as _colorama_init
+_colorama_init()
+
+__all__ = ['Terminal', 'Box', 'BoxStyles', 'Waiting']
