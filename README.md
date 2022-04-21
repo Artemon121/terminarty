@@ -70,7 +70,9 @@ Round:
 from terminarty import Waiting
 import time
 
-with Waiting("Loading"): # "Loading..." would work the same
+with Waiting("Loading"):  # "Loading..." would work the same
     time.sleep(5)
 ```
-!["Loading..."](https://imgur.com/a/hMhNov2.gif)
+!["Loading..."](https://media.giphy.com/media/qFxscRiUabzl0p5twq/giphy.gif)
+
+
