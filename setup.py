@@ -1,11 +1,5 @@
 from setuptools import setup, find_packages
-import codecs
-import os
 
-here = os.path.abspath(os.path.dirname(__file__))
-
-with codecs.open('README.md', 'r', encoding='utf-8') as f:
-    long_description = f.read()
 
 VERSION = '0.0.5'
 DESCRIPTION = 'A simple CLI helper for python'
@@ -16,13 +10,15 @@ setup(
     version=VERSION,
     description=DESCRIPTION,
     long_description_content_type='text/markdown',
-    long_description=long_description,
+    long_description='Check '
+                     '[GitHub repository](https://github.com/Artemon121/terminarty)'
+                     ' for more information',
     packages=find_packages(),
     install_requires=['colorama'],
-    keywords=['terminal', 'cli', 'command-line', 'python', 'colored'],
+    keywords=['terminal', 'cli', 'command-line', 'python', 'colored', 'progress bar'],
     author='Artemon121',
     classifiers=[   
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
