@@ -2,6 +2,7 @@ import time
 import threading
 from colorama import Fore, Style
 from typing import Optional
+from . import Terminal
 
 class Waiting:
     def __init__(self, doing: str, delay: Optional[float] = 0.3) -> None:
@@ -17,18 +18,25 @@ class Waiting:
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         self._stop()
         if exc_type is not None:
-            print(f'\r{self.doing}... {Fore.RED}ERROR{Style.RESET_ALL}')
+            s = f'\r{self.doing}... {Fore.RED}ERROR{Style.RESET_ALL}'
+            Terminal._updating_line = s
+            print(s)
         else:
-            print(f'\r{self.doing}... {Fore.GREEN}DONE{Style.RESET_ALL}')
+            s = f'\r{self.doing}... {Fore.GREEN}DONE{Style.RESET_ALL}'
+            Terminal._updating_line = s
+            print(s)
 
     def _loop(self):
         dots = 1
         while self._running:
-            print(f'\r{self.doing}{dots * "."}{" " * (3 - dots)}{Style.RESET_ALL}', end='')
+            s = f'\r{self.doing}{dots * "."}{" " * (3 - dots)}{Style.RESET_ALL}'
+            Terminal._updating_line = s
+            print(s, end='')
             dots += 1 if dots < 3 else -2
             time.sleep(self.delay)
 
     def _stop(self) -> None:
+        Terminal._updating_line = ''
         self._running = False
         self._thread.join()
 

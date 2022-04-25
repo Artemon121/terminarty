@@ -74,3 +74,17 @@ with Waiting("Loading"):  # "Loading..." would work the same
     time.sleep(5)
 ```
 !["Loading..."](https://media.giphy.com/media/qFxscRiUabzl0p5twq/giphy.gif)
+
+**Progress Bars**
+```python
+from terminarty import ProgressBar
+import time
+
+progress = ProgressBar(121)
+for _ in range(121):
+    time.sleep(0.1)
+    progress += 1
+```
+!["Progress Bar"](https://media.giphy.com/media/GT8mIvDlXOdnyLdKyr/giphy.gif)
+> **Note**: If you want to print something while the waiting or progress bar is running,
+> you would need to use `terminal.print()` instead of `print()`

@@ -1,16 +1,17 @@
 from colorama import Fore, Style
 from typing import Optional
 import os
-import sys
 
 class Terminal:
-    _instantiated = False
+    _instance = None
+    _updating_line = ''
+
     INPUT_STYLE = f'{Fore.YELLOW} > {Style.RESET_ALL}'
 
     def __init__(self) -> None:
-        if Terminal._instantiated:
+        if Terminal._instance is not None:
             raise RuntimeError('Only one instance of Terminal is allowed')
-        Terminal._instantiated = True
+        Terminal._instance = self
 
     @staticmethod
     def clear() -> None:
@@ -23,6 +24,15 @@ class Terminal:
         inp = input(Terminal.INPUT_STYLE)
         Terminal.clear()
         return inp
+
+    @staticmethod
+    def print(*args, sep: Optional[str] = ' ') -> None:
+        if Terminal._updating_line:
+            s = '\r' + sep.join(list(map(str, args)))
+            print(s, end=f'{" " * (len(Terminal._updating_line) - len(s))}\n')
+            print(Terminal._updating_line, end='')
+        else:
+            print(*args, sep=sep)
 
     @staticmethod
     def choise(text: str, choises: list[str]) -> str:
