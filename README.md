@@ -87,4 +87,4 @@ for _ in range(121):
 ```
 !["Progress Bar"](https://media.giphy.com/media/GT8mIvDlXOdnyLdKyr/giphy.gif)
 > **Note**: If you want to print something while the waiting or progress bar is running,
-> you would need to use `terminal.print()` instead of `print()`
+> you would need to use ``terminal.print()`` instead of ``print()``
