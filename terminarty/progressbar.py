@@ -2,7 +2,7 @@ from colorama import Fore, Style
 from .terminal import Terminal
 
 class ProgressBar:
-    def __init__(self, total: int) -> None:
+    def __init__(self, total: [int, float]) -> None:
         self.total = total
         self.current = 0
         self.procentage = 0
@@ -19,19 +19,20 @@ class ProgressBar:
         )
         if self.current == self.total:
             Terminal._updating_line = ''
+            return s + '\n'
         else:
             Terminal._updating_line = s
-        return s
+            return s
 
-    def __iadd__(self, value: int) -> 'ProgressBar':
+    def __iadd__(self, value: [int, float]) -> 'ProgressBar':
         self.update(self.current + value)
         return self
 
-    def __isub__(self, value: int) -> 'ProgressBar':
+    def __isub__(self, value: [int, float]) -> 'ProgressBar':
         self.update(self.current - value)
         return self
 
-    def update(self, current) -> None:
+    def update(self, current: [int, float]) -> None:
         if current > self.total:
             self.current = self.total
         else:
