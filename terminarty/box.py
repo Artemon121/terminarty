@@ -1,4 +1,3 @@
-
 from typing import Optional, Type
 from colorama import Style
 from . import BoxStyles
@@ -13,6 +12,18 @@ class Box:
         self.text = text
         self.style = style
         self.color = color
+
+    @staticmethod
+    def from_2d_list(list_2d: list[list],
+                     style: Optional[Type[BoxStyles.BoxStyle]] = BoxStyles.Thin,
+                     *,
+                     color: Optional[str] = '',
+                     ) -> 'Box':
+        return Box(
+            '\n'.join([''.join(str(x)) for x in list_2d]),
+            style=style,
+            color=color,
+        )
 
     def __str__(self) -> str:
         VERTICAL_LINE = self.style.VERTICAL_LINE

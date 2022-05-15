@@ -1,6 +1,7 @@
-from colorama import Fore, Style
+from colorama import Fore, Back, Style
 from typing import Optional
 import os
+from .getchar import getchar
 
 class Terminal:
     _instance = None
@@ -18,12 +19,20 @@ class Terminal:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     @staticmethod
+    def bell() -> None:
+        print('\a', end='')
+
+    @staticmethod
     def input(text: str) -> str:
         Terminal.clear()
         print(text)
         inp = input(Terminal.INPUT_STYLE)
         Terminal.clear()
         return inp
+
+    @staticmethod
+    def getchar() -> bytes:
+        return getchar()
 
     @staticmethod
     def print(*args, sep: Optional[str] = ' ') -> None:
@@ -43,8 +52,39 @@ class Terminal:
             for i, c in enumerate(choises):
                 print(f'{Fore.RED}[{Fore.YELLOW}{i + 1}{Fore.RED}]{Style.RESET_ALL} {c}')
             try:
-                inp = int(input(Terminal.INPUT_STYLE).strip())
+                print(Terminal.INPUT_STYLE, end='')
+                inp = int(Terminal.getchar())
             except ValueError:
                 pass
         Terminal.clear()
         return choises[inp - 1]
+
+    @staticmethod
+    def select(text: str, choises: list[str]) -> str:
+        selected = 0
+        Terminal.clear()
+        print(f'\x1B[{len(text.splitlines()) + len(choises) + 1}A')
+        while True:
+            print(text)
+            for i, choise in enumerate(choises):
+                print(f'{Back.LIGHTBLACK_EX if i == selected else Back.BLACK}'
+                      f'{choise}'
+                      f'{Style.RESET_ALL}')
+            char1 = Terminal.getchar()
+            if char1 == b'\r':
+                break
+            elif char1 != b'\xe0':
+                print(f'\x1B[{len(text.splitlines()) + len(choises) + 1}A')
+                continue
+            char2 = Terminal.getchar()
+            if char1 + char2 == b'\xe0H':
+                selected -= 1
+                if selected < 0:
+                    selected = len(choises) - 1
+            elif char1 + char2 == b'\xe0P':
+                selected += 1
+                if selected == len(choises):
+                    selected = 0
+            print(f'\x1B[{len(text.splitlines()) + len(choises) + 1}A')
+        Terminal.clear()
+        return choises[selected]

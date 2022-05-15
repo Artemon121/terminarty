@@ -26,7 +26,6 @@ name = terminal.input("What is your name?")
 from terminarty import Terminal
 
 terminal = Terminal()
-
 choise = terminal.choise("What is your favorite color?", ["red", "green", "blue"])
 
 if choise == "green":
@@ -35,6 +34,22 @@ else:
     print("Ok.")
 ```
 !["What is your favorite color?" (red, green, blue)](https://imgur.com/NQwkfj6.png)
+
+**Selects**
+```python
+from terminarty import Terminal
+
+terminal = Terminal()
+choise = terminal.select("What is your favorite color?", ["red", "green", "blue"])
+
+if choise == "green":
+    print("I like green too!")
+else:
+    print("Ok.")
+```
+_Up and down arrows to navigate. Enter to select._
+
+!["What is your favorite color?" (red, green, blue)](https://media.giphy.com/media/UzI2TazF6lCC0Jz9dJ/giphy.gif)
 
 **Text Boxes**
 ```python
