@@ -8,6 +8,7 @@ from .getchar import getchar
 
 
 class Terminal:
+    """Main terminarty class."""
     _instance = None
     _updating_line = ''
 
@@ -20,22 +21,27 @@ class Terminal:
 
     @staticmethod
     def clear() -> None:
+        """Clears entire terminal screen."""
         os.system('cls' if os.name == 'nt' else 'clear')
 
     @staticmethod
     def bell() -> None:
+        """Makes an audible noise."""
         print('\a', end='')
 
     @staticmethod
     def save_screen() -> None:
+        """Save current terminal screen state. Can be restored with ``Terminal.restore_screen()``."""
         print('\033[?47h', end='')
 
     @staticmethod
     def restore_screen() -> None:
+        """Restores current terminal screen state. Can be saved with ``Terminal.save_screen()``."""
         print('\033[?47l', end='')
 
     @staticmethod
     def input(text: str) -> str:
+        """Gets input from the user. Just like built in ``input()`` function just with more style."""
         Terminal.clear()
         print(text)
         inp = input(Terminal.INPUT_STYLE)
@@ -44,10 +50,12 @@ class Terminal:
 
     @staticmethod
     def getchar() -> bytes:
+        """Gets one character from the user input."""
         return getchar()
 
     @staticmethod
     def print(*args, sep: Optional[str] = ' ') -> None:
+        """Used for printing text, when progress bar or waiting is running."""
         if Terminal._updating_line:
             s = '\r' + sep.join(list(map(str, args)))
             print(s, end=f'{" " * (len(Terminal._updating_line) - len(s))}\n')
