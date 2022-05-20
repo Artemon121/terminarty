@@ -1,8 +1,11 @@
-import time
 import threading
-from colorama import Fore, Style
+import time
 from typing import Optional
+
+from colorama import Fore, Style
+
 from . import Terminal
+
 
 class Waiting:
     def __init__(self, doing: str, delay: Optional[float] = 0.3) -> None:

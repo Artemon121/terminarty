@@ -1,7 +1,6 @@
 from setuptools import setup, find_packages
 
-
-VERSION = '0.2.0'
+VERSION = '0.3.0'
 DESCRIPTION = 'A simple CLI helper for python'
 
 # Setting up
@@ -17,7 +16,7 @@ setup(
     install_requires=['colorama'],
     keywords=['terminal', 'cli', 'command-line', 'python', 'colored', 'progress bar'],
     author='Artemon121',
-    classifiers=[   
+    classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',

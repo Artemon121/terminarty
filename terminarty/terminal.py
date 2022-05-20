@@ -1,7 +1,11 @@
-from colorama import Fore, Back, Style
-from typing import Optional
 import os
+from typing import Optional
+
+from colorama import Fore, Back, Style
+
+from .cursor import Cursor
 from .getchar import getchar
+
 
 class Terminal:
     _instance = None
@@ -21,6 +25,14 @@ class Terminal:
     @staticmethod
     def bell() -> None:
         print('\a', end='')
+
+    @staticmethod
+    def save_screen() -> None:
+        print('\033[?47h', end='')
+
+    @staticmethod
+    def restore_screen() -> None:
+        print('\033[?47l', end='')
 
     @staticmethod
     def input(text: str) -> str:
@@ -44,12 +56,12 @@ class Terminal:
             print(*args, sep=sep)
 
     @staticmethod
-    def choise(text: str, choises: list[str]) -> str:
+    def choise(text: str, choices: list[str], *, index: bool = False) -> str:
         inp = 0
-        while not isinstance(inp, int) or inp < 1 or inp > len(choises):
+        while not isinstance(inp, int) or inp < 1 or inp > len(choices):
             Terminal.clear()
             print(text)
-            for i, c in enumerate(choises):
+            for i, c in enumerate(choices):
                 print(f'{Fore.RED}[{Fore.YELLOW}{i + 1}{Fore.RED}]{Style.RESET_ALL} {c}')
             try:
                 print(Terminal.INPUT_STYLE, end='')
@@ -57,34 +69,35 @@ class Terminal:
             except ValueError:
                 pass
         Terminal.clear()
-        return choises[inp - 1]
+        return inp - 1 if index else choices[inp - 1]
 
     @staticmethod
-    def select(text: str, choises: list[str]) -> str:
+    def select(text: str, choices: list[str], *, index: bool = False) -> str:
         selected = 0
         Terminal.clear()
-        print(f'\x1B[{len(text.splitlines()) + len(choises) + 1}A')
+        Cursor.up(len(text.splitlines()) + len(choices) + 1)
         while True:
             print(text)
-            for i, choise in enumerate(choises):
-                print(f'{Back.LIGHTBLACK_EX if i == selected else Back.BLACK}'
-                      f'{choise}'
-                      f'{Style.RESET_ALL}')
+            for i, choise in enumerate(choices):
+                print(f'{Back.LIGHTBLACK_EX if i == selected else Back.BLACK}',
+                      f'{choise}',
+                      f'{Style.RESET_ALL}',
+                      sep='')
             char1 = Terminal.getchar()
             if char1 == b'\r':
                 break
             elif char1 != b'\xe0':
-                print(f'\x1B[{len(text.splitlines()) + len(choises) + 1}A')
+                Cursor.up(len(text.splitlines()) + len(choices) + 1)
                 continue
             char2 = Terminal.getchar()
-            if char1 + char2 == b'\xe0H':
+            if char2 == b'H':
                 selected -= 1
                 if selected < 0:
-                    selected = len(choises) - 1
-            elif char1 + char2 == b'\xe0P':
+                    selected = len(choices) - 1
+            elif char2 == b'P':
                 selected += 1
-                if selected == len(choises):
+                if selected == len(choices):
                     selected = 0
-            print(f'\x1B[{len(text.splitlines()) + len(choises) + 1}A')
+            Cursor.up(len(text.splitlines()) + len(choices) + 1)
         Terminal.clear()
-        return choises[selected]
+        return selected if index else choices[selected]
