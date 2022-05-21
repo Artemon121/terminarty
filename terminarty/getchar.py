@@ -1,13 +1,13 @@
 # https://code.activestate.com/recipes/134892/
+import os
 
 class _Getch:
-    """Gets a single character from standard input.  Does not echo to the
-screen."""
+    """Gets a single character from standard input. Does not echo to the screen."""
 
     def __init__(self):
-        try:
+        if os.name == 'nt':
             self.impl = _GetchWindows()
-        except ImportError:
+        else:
             self.impl = _GetchUnix()
 
     def __call__(self):
@@ -29,7 +29,7 @@ class _GetchUnix:
             ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+        return ch.encode('utf-8')
 
 
 class _GetchWindows:

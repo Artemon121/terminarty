@@ -50,7 +50,7 @@ class Terminal:
 
     @staticmethod
     def getchar() -> bytes:
-        """Gets one character from the user input."""
+        """Gets a single character from standard input. Does not echo to the screen."""
         return getchar()
 
     @staticmethod
@@ -83,7 +83,7 @@ class Terminal:
     def select(text: str, choices: list[str], *, index: bool = False) -> str:
         selected = 0
         Terminal.clear()
-        Cursor.up(len(text.splitlines()) + len(choices) + 1)
+        Cursor.setpos(1, 1)
         while True:
             print(text)
             for i, choise in enumerate(choices):
@@ -94,8 +94,22 @@ class Terminal:
             char1 = Terminal.getchar()
             if char1 == b'\r':
                 break
+            elif char1 == b'\x03':
+                raise KeyboardInterrupt
+            elif char1 == b'\x1b':
+                char2, char3 = Terminal.getchar(), Terminal.getchar()
+                if char2 == b'[' and char3 in b'A\x1b':
+                    selected -= 1
+                    if selected < 0:
+                        selected = len(choices) - 1
+                elif char2 == b'[' and char3 in b'B\x1b':
+                    selected += 1
+                    if selected == len(choices):
+                        selected = 0
+                Cursor.setpos(1, 1)
+                continue
             elif char1 != b'\xe0':
-                Cursor.up(len(text.splitlines()) + len(choices) + 1)
+                Cursor.setpos(1, 1)
                 continue
             char2 = Terminal.getchar()
             if char2 == b'H':
@@ -106,6 +120,6 @@ class Terminal:
                 selected += 1
                 if selected == len(choices):
                     selected = 0
-            Cursor.up(len(text.splitlines()) + len(choices) + 1)
+            Cursor.setpos(1, 1)
         Terminal.clear()
         return selected if index else choices[selected]
