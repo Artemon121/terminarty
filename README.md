@@ -27,31 +27,15 @@ name = terminal.input("What is your name?")
 
 !["What is yout name?"](https://imgur.com/huf4E5P.png)
 
-**Choises**
-
-```python
-from terminarty import Terminal
-
-terminal = Terminal()
-choise = terminal.choise("What is your favorite color?", ["red", "green", "blue"])
-
-if choise == "green":
-    print("I like green too!")
-else:
-    print("Ok.")
-```
-
-!["What is your favorite color?" (red, green, blue)](https://imgur.com/NQwkfj6.png)
-
 **Selects**
 
 ```python
 from terminarty import Terminal
 
 terminal = Terminal()
-choise = terminal.select("What is your favorite color?", ["red", "green", "blue"])
+choice = terminal.select("What is your favorite color?", ["red", "green", "blue"])
 
-if choise == "green":
+if choice == "green":
     print("I like green too!")
 else:
     print("Ok.")
@@ -100,11 +84,9 @@ Round:
 from terminarty import Waiting
 import time
 
-with Waiting("Loading"):  # "Loading..." would work the same
+with Waiting("Loading"):
     time.sleep(5)
 ```
-
-!["Loading..."](https://media.giphy.com/media/qFxscRiUabzl0p5twq/giphy.gif)
 
 **Progress Bars**
 

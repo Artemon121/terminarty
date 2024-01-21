@@ -5,18 +5,19 @@ CSI = '\033['
 
 class Cursor:
     """Class, that allows for cursor controls."""
+
     @staticmethod
     def setpos(x: Optional[int] = 1, y: Optional[int] = 1) -> None:
         """Sets cursor position to given x and y (column and row) coordinates. Count starts from 1."""
         print(f'{CSI}{y};{x}H', end='')
 
     @staticmethod
-    def savepos() -> None:
+    def save_pos() -> None:
         """Saves current cursor position. Can be restored with ``Cursor.restorepos()``"""
         print(f'\0337', end='')
 
     @staticmethod
-    def restorepos() -> None:
+    def restore_pos() -> None:
         """Restores current cursor position. Can be saved with ``Cursor.savepos()``"""
         print(f'\0338', end='')
 

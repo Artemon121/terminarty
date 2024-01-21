@@ -8,9 +8,16 @@ from . import Terminal
 
 
 class Waiting:
-    def __init__(self, doing: str, delay: Optional[float] = 0.3) -> None:
+    """A class to show a waiting message while some process is running."""
+
+    def __init__(self, doing: str, timer: bool = True) -> None:
+        """
+        :param doing: The message to show.
+        :param timer: Whether to show the elapsed time. Default: True.
+        """
         self.doing = doing.strip().rstrip('...')
-        self.delay = delay
+        self.timer = 0 if timer else None
+        self.stated_time = time.perf_counter()
         self._running = True
         self._thread = threading.Thread(target=self._loop, daemon=True)
 
@@ -22,21 +29,27 @@ class Waiting:
         self._stop()
         if exc_type is not None:
             s = f'\r{self.doing}... {Fore.RED}ERROR{Style.RESET_ALL}'
+            if self.timer is not None:
+                s += f' {Fore.WHITE}({self.timer:.1f}s){Style.RESET_ALL}'
             Terminal._updating_line = s
             print(s)
         else:
             s = f'\r{self.doing}... {Fore.GREEN}DONE{Style.RESET_ALL}'
+            if self.timer is not None:
+                s += f' {Fore.WHITE}({self.timer:.1f}s){Style.RESET_ALL}'
             Terminal._updating_line = s
             print(s)
 
     def _loop(self):
-        dots = 1
         while self._running:
-            s = f'\r{self.doing}{dots * "."}{" " * (3 - dots)}{Style.RESET_ALL}'
+            if self.timer is not None:
+                self.timer = time.perf_counter() - self.stated_time
+            s = f'\r{self.doing}...{Style.RESET_ALL}'
+            if self.timer is not None:
+                s += f'{Fore.WHITE}({self.timer:.1f}s){Style.RESET_ALL}'
             Terminal._updating_line = s
             print(s, end='')
-            dots += 1 if dots < 3 else -2
-            time.sleep(self.delay)
+            time.sleep(0.05)
 
     def _stop(self) -> None:
         Terminal._updating_line = ''
@@ -49,8 +62,14 @@ class Waiting:
 
     def done(self) -> None:
         self._stop()
-        print(f'\r{self.doing}... {Fore.GREEN}DONE{Style.RESET_ALL}')
+        s = f'\r{self.doing}... {Fore.GREEN}DONE{Style.RESET_ALL}'
+        if self.timer is not None:
+            s += f' {Fore.WHITE}({self.timer:.1f}s){Style.RESET_ALL}'
+        print(s)
 
     def error(self) -> None:
         self._stop()
-        print(f'\r{self.doing}... {Fore.RED}ERROR{Style.RESET_ALL}')
+        s = f'\r{self.doing}... {Fore.RED}ERROR{Style.RESET_ALL}'
+        if self.timer is not None:
+            s += f' {Fore.WHITE}({self.timer:.1f}s){Style.RESET_ALL}'
+        print(s)

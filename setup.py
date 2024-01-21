@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.3.1'
+VERSION = '1.0.0'
 DESCRIPTION = 'A simple CLI helper for python'
 
 # Setting up
@@ -21,9 +21,10 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: 3',
         'Operating System :: Unix',
         'Operating System :: MacOS :: MacOS X',

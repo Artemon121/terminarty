@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Optional, Union
 
 from colorama import Fore, Back, Style
 
@@ -12,7 +12,7 @@ class Terminal:
     _instance = None
     _updating_line = ''
 
-    INPUT_STYLE = f'{Fore.YELLOW} > {Style.RESET_ALL}'
+    INPUT_STYLE = f'{Fore.YELLOW}>{Style.RESET_ALL} '
 
     def __init__(self) -> None:
         if Terminal._instance is not None:
@@ -40,12 +40,26 @@ class Terminal:
         print('\033[?47l', end='')
 
     @staticmethod
-    def input(text: str) -> str:
-        """Gets input from the user. Just like built in ``input()`` function just with more style."""
-        Terminal.clear()
+    def input(text: str, clear: bool) -> str:
+        """
+        Gets input from the user. Just like built in ``input()`` function just with more style.
+
+        :param text: Text to display before input.
+        :param clear: If ``True`` clears the screen before and after displaying the text.
+        :return: User input.
+
+        :Example:
+        >>> x = Terminal.input('Enter your name: ', clear=True)
+        Enter your name:
+        >>> x
+        'John'
+        """
+        if clear:
+            Terminal.clear()
         print(text)
         inp = input(Terminal.INPUT_STYLE)
-        Terminal.clear()
+        if clear:
+            Terminal.clear()
         return inp
 
     @staticmethod
@@ -55,40 +69,46 @@ class Terminal:
 
     @staticmethod
     def print(*args, sep: Optional[str] = ' ') -> None:
-        """Used for printing text, when progress bar or waiting is running."""
-        if Terminal._updating_line:
-            s = '\r' + sep.join(list(map(str, args)))
-            print(s, end=f'{" " * (len(Terminal._updating_line) - len(s))}\n')
-            print(Terminal._updating_line, end='')
-        else:
-            print(*args, sep=sep)
+        """
+        Used for printing text, when progress bar or waiting is running.
 
-    @staticmethod
-    def choise(text: str, choices: list[str], *, index: bool = False) -> str:
-        inp = 0
-        while not isinstance(inp, int) or inp < 1 or inp > len(choices):
-            Terminal.clear()
-            print(text)
-            for i, c in enumerate(choices):
-                print(f'{Fore.RED}[{Fore.YELLOW}{i + 1}{Fore.RED}]{Style.RESET_ALL} {c}')
-            try:
-                print(Terminal.INPUT_STYLE, end='')
-                inp = int(Terminal.getchar())
-            except ValueError:
-                pass
-        Terminal.clear()
-        return inp - 1 if index else choices[inp - 1]
+        :param args: Arguments to print.
+        :param sep: Separator between arguments.
+        :Example:
+        >>> Terminal.print('Hello', 'world')
+        Hello world
+        >>> Terminal.print('Hello', 'world', sep='-')
+        Hello-world
+        >>> Terminal.print('Hello', 'world', sep='-', end='!')
+        Hello-world!
+        """
+        if not Terminal._updating_line:
+            print(*args, sep=sep)
+        else:
+            string = '\r' + sep.join(list(map(str, args)))
+            end = f'{" " * (len(Terminal._updating_line) - len(string))}\n'
+            print(string, end=end)
+            print(Terminal._updating_line, end='')
 
     @staticmethod
     def select(text: str, choices: list[str], *, index: bool = False) -> str:
+        """
+        Asks user to select one of the choices from the list.
+        User can move up and down with arrows and select with Enter.
+
+        :param text: Text to display before choices.
+        :param choices: List of choices.
+        :param index: If ``True`` returns index of the selected choice instead of the choice itself.
+        :return: Selected choice.
+        """
         selected = 0
         Terminal.clear()
         Cursor.setpos(1, 1)
         while True:
             print(text)
-            for i, choise in enumerate(choices):
+            for i, choice in enumerate(choices):
                 print(f'{Back.LIGHTBLACK_EX if i == selected else Back.BLACK}',
-                      f'{choise}',
+                      f'{choice}',
                       f'{Style.RESET_ALL}',
                       sep='')
             char1 = Terminal.getchar()
